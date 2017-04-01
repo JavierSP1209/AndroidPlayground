@@ -13,11 +13,13 @@ import android.widget.TextView;
  */
 
 public class PlaceholderFragment extends Fragment {
+
     /**
      * The fragment argument representing the section number for this
      * fragment.
      */
     private static final String ARG_MESSAGE = "message";
+    private TextView txtMessageLog;
 
     public PlaceholderFragment() {
     }
@@ -38,8 +40,8 @@ public class PlaceholderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-        textView.setText(getString(R.string.section_format, getString(getArguments().getInt(ARG_MESSAGE))));
+        txtMessageLog = (TextView) rootView.findViewById(R.id.section_label);
+        txtMessageLog.setText(getString(R.string.section_format, getString(getArguments().getInt(ARG_MESSAGE))));
         return rootView;
     }
 }
