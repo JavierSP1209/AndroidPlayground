@@ -1,4 +1,4 @@
-package com.example.javiersilva.tabssample;
+package com.javiersilva.playground;
 
 import android.animation.Animator;
 import android.os.Build;
@@ -23,6 +23,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
+
+import com.example.javiersilva.playground.R;
 
 public class MainActivity extends AppCompatActivity {
 

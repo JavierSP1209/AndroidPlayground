@@ -1,4 +1,4 @@
-package com.example.javiersilva.tabssample;
+package com.javiersilva.playground;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

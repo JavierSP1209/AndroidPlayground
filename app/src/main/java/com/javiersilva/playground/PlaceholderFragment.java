@@ -1,4 +1,4 @@
-package com.example.javiersilva.tabssample;
+package com.javiersilva.playground;
 
 import android.os.Bundle;
 import android.support.annotation.StringRes;
@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.example.javiersilva.playground.R;
 
 /**
  * Created by javiersilva on 4/1/17.
@@ -26,8 +28,8 @@ public class PlaceholderFragment extends Fragment {
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static com.example.javiersilva.tabssample.PlaceholderFragment newInstance(@StringRes int message) {
-        com.example.javiersilva.tabssample.PlaceholderFragment fragment = new com.example.javiersilva.tabssample.PlaceholderFragment();
+    public static PlaceholderFragment newInstance(@StringRes int message) {
+        PlaceholderFragment fragment = new PlaceholderFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_MESSAGE, message);
         fragment.setArguments(args);
