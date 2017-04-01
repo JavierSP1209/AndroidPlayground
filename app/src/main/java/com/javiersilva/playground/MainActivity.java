@@ -1,6 +1,7 @@
 package com.javiersilva.playground;
 
 import android.animation.Animator;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -21,10 +22,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 import android.widget.ViewSwitcher;
-
-import com.example.javiersilva.playground.R;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -82,7 +80,8 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Initing...", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, LongRunningIntentService.class);
+                startService(intent);
             }
         });
         setTitle(null);
@@ -141,8 +140,6 @@ public class MainActivity extends AppCompatActivity {
         imgHeader.setImageResource(background);
         imgSectionIcon.setImageResource(icon);
     }
-
-    //TODO: Delete this fragment after adding the containers
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to

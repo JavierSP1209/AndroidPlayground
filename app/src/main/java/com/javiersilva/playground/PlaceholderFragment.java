@@ -8,8 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.javiersilva.playground.R;
-
 /**
  * Created by javiersilva on 4/1/17.
  */
