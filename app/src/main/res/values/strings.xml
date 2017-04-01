@@ -1,8 +1,9 @@
 <resources>
     <string name="app_name">TabsSample</string>
     <string name="action_settings">Settings</string>
-    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="section_format">Hello! I\'m: %1$s</string>
     <string name="section_title_profile">PROFILE</string>
     <string name="section_title_wish_list">WISH LIST</string>
     <string name="section_title_feed">FEED</string>
+    <string name="waiting">Waiting for something</string>
 </resources>
