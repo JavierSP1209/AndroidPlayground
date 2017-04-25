@@ -12,13 +12,15 @@ import javax.inject.Inject;
 
 public class Dog implements Pet {
 
-    @Inject
-    public Dog() {
+    private String sound;
 
+    @Inject
+    public Dog(String sound) {
+        this.sound = sound;
     }
 
     @Override
     public void doNoice() {
-        Log.d(Constants.DAGGER_TAG, "Wouf!!");
+        Log.d(Constants.DAGGER_TAG, sound);
     }
 }
