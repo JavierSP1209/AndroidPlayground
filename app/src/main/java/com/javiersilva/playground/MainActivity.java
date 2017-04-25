@@ -1,7 +1,6 @@
 package com.javiersilva.playground;
 
 import android.animation.Animator;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -14,6 +13,7 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.AccelerateInterpolator;
@@ -23,6 +23,13 @@ import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ViewSwitcher;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
     private ImageSwitcher imgHeader;
     private ImageView imgSectionIcon;
     private View overlay;
+
+    private LongRunningObservableFactory factory = new LongRunningObservableFactory();
+    private CompositeDisposable disposables = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,11 +90,34 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, LongRunningIntentService.class);
-                startService(intent);
+                Observable<String> observable = factory.start();
+                Disposable disposable = observable.subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<String>() {
+                            @Override
+                            public void accept(String value) throws Exception {
+                                Log.d(Constants.TAG, "New message: " + value);
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception {
+                                Log.e(Constants.TAG, "Error: " + throwable.getMessage());
+                            }
+                        });
+                disposables.add(disposable);
             }
         });
         setTitle(null);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(Constants.TAG, "onPause() called");
+        if (disposables != null && !disposables.isDisposed()) {
+            Log.d(Constants.TAG, "dispose: ");
+            disposables.dispose();
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
