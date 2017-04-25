@@ -24,6 +24,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ViewSwitcher;
 
+import com.javiersilva.playground.dagger.Owner;
+import com.javiersilva.playground.di.DaggerPlaygroundComponent;
+import com.javiersilva.playground.di.PlaygroundComponent;
+
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -43,13 +47,18 @@ public class MainActivity extends AppCompatActivity {
     private ImageView imgSectionIcon;
     private View overlay;
 
-    private LongRunningObservableFactory factory = new LongRunningObservableFactory();
+    private LongRunningObservableFactory factory;
     private CompositeDisposable disposables = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        PlaygroundComponent component = DaggerPlaygroundComponent.create();
+        Owner owner = component.getOwner();
+        factory = component.getLongRunningObservableFactory();
+        owner.instructSomething();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
