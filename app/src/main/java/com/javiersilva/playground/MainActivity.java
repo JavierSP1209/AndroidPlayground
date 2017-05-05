@@ -24,6 +24,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ViewSwitcher;
 
+import com.javiersilva.playground.dagger.Owner;
+import com.javiersilva.playground.di.DaggerPlaygroundComponent;
+import com.javiersilva.playground.di.PlaygroundComponent;
+
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -43,13 +47,32 @@ public class MainActivity extends AppCompatActivity {
     private ImageView imgSectionIcon;
     private View overlay;
 
-    private LongRunningObservableFactory factory = new LongRunningObservableFactory();
+    private LongRunningObservableFactory factory;
     private CompositeDisposable disposables = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        /*
+          There are different ways to initialize a component/module:
+          1 - If the module has a default constructor we can call .create() directly:
+               PlaygroundComponent component = DaggerPlaygroundComponent.create();
+          2 - If not we need specify how the module is created using a builder:
+               PlaygroundComponent component = DaggerPlaygroundComponent.builder()
+                   .playgroundModule(new PlaygroundModule(PARAMS)).build()
+          3 - Finally, if ALL the methods are static, we do not need an instance of the module, so
+              dagger will mark the module method (playgroundModule()) as deprecated since no instance
+              is needed and we can use create()
+               PlaygroundComponent component = DaggerPlaygroundComponent.create();
+          the main difference between 1 and 3 is the code generated for the module in which 3 is
+          preferred since is more efficient
+         */
+        PlaygroundComponent component = DaggerPlaygroundComponent.create();
+        Owner owner = component.getOwner();
+        factory = component.getLongRunningObservableFactory();
+        owner.instructSomething();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
