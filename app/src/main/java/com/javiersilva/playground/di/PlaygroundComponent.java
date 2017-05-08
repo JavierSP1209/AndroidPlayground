@@ -1,7 +1,7 @@
 package com.javiersilva.playground.di;
 
-import com.javiersilva.playground.LongRunningObservableFactory;
-import com.javiersilva.playground.dagger.Owner;
+import com.javiersilva.playground.collapsingtoolbar.LongRunningObservableFactory;
+import com.javiersilva.playground.collapsingtoolbar.model.Owner;
 
 import dagger.Component;
 

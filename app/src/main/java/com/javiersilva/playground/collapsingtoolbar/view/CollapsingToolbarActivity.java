@@ -1,4 +1,4 @@
-package com.javiersilva.playground;
+package com.javiersilva.playground.collapsingtoolbar.view;
 
 import android.animation.Animator;
 import android.os.Build;
@@ -24,7 +24,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ViewSwitcher;
 
-import com.javiersilva.playground.dagger.Owner;
+import com.javiersilva.playground.common.Constants;
+import com.javiersilva.playground.collapsingtoolbar.LongRunningObservableFactory;
+import com.javiersilva.playground.common.view.PlaceholderFragment;
+import com.javiersilva.playground.R;
+import com.javiersilva.playground.collapsingtoolbar.model.Owner;
 import com.javiersilva.playground.di.DaggerPlaygroundComponent;
 import com.javiersilva.playground.di.PlaygroundComponent;
 
@@ -35,7 +39,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class MainActivity extends AppCompatActivity {
+public class CollapsingToolbarActivity extends AppCompatActivity {
 
     public static final int SECTION_COUNT = 3;
     public static final int SECTION_PROFILE = 0;
