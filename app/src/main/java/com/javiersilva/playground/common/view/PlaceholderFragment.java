@@ -1,4 +1,4 @@
-package com.javiersilva.playground;
+package com.javiersilva.playground.common.view;
 
 import android.os.Bundle;
 import android.support.annotation.StringRes;
@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.javiersilva.playground.R;
 
 /**
  * Created by javiersilva on 4/1/17.

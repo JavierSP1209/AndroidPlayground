@@ -1,4 +1,4 @@
-package com.javiersilva.playground.dagger;
+package com.javiersilva.playground.collapsingtoolbar.model;
 
 /**
  * Interface that will be implemented in a separate class which will be injected by dagger

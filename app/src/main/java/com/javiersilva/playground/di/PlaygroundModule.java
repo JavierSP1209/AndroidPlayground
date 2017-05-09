@@ -1,8 +1,8 @@
 package com.javiersilva.playground.di;
 
-import com.javiersilva.playground.LongRunningObservableFactory;
-import com.javiersilva.playground.dagger.Dog;
-import com.javiersilva.playground.dagger.Pet;
+import com.javiersilva.playground.collapsingtoolbar.LongRunningObservableFactory;
+import com.javiersilva.playground.collapsingtoolbar.model.Dog;
+import com.javiersilva.playground.collapsingtoolbar.model.Pet;
 
 import dagger.Module;
 import dagger.Provides;

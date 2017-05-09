@@ -1,4 +1,4 @@
-package com.javiersilva.playground;
+package com.javiersilva.playground.common;
 
 public class Constants {
 

@@ -1,4 +1,4 @@
-package com.javiersilva.playground;
+package com.javiersilva.playground.collapsingtoolbar;
 
 import android.util.Log;
 
@@ -6,7 +6,7 @@ import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
 
-import static com.javiersilva.playground.Constants.TAG;
+import static com.javiersilva.playground.common.Constants.TAG;
 
 /**
  * Created by javiersilva on 4/1/17.

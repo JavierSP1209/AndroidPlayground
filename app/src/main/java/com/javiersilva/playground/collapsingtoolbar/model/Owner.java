@@ -1,8 +1,8 @@
-package com.javiersilva.playground.dagger;
+package com.javiersilva.playground.collapsingtoolbar.model;
 
 import android.util.Log;
 
-import com.javiersilva.playground.Constants;
+import com.javiersilva.playground.common.Constants;
 
 import javax.inject.Inject;
 
