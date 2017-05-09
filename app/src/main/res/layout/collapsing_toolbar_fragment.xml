@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.javiersilva.playground.collapsingtoolbar.view.CollapsingToolbarActivity">
+    tools:context="com.javiersilva.playground.collapsingtoolbar.view.CollapsingToolbarFragment">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -52,15 +52,12 @@
                 android:layout_gravity="top"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
-
             <android.support.design.widget.TabLayout
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom" />
-
+                android:layout_gravity="bottom"/>
         </android.support.design.widget.CollapsingToolbarLayout>
-
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager
