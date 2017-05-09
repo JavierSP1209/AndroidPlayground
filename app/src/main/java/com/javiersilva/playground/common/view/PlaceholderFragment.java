@@ -1,4 +1,4 @@
-package com.javiersilva.playground;
+package com.javiersilva.playground.common.view;
 
 import android.os.Bundle;
 import android.support.annotation.StringRes;
@@ -8,16 +8,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.javiersilva.playground.R;
+
 /**
  * Created by javiersilva on 4/1/17.
  */
 
 public class PlaceholderFragment extends Fragment {
+
     /**
      * The fragment argument representing the section number for this
      * fragment.
      */
     private static final String ARG_MESSAGE = "message";
+    private TextView txtMessageLog;
 
     public PlaceholderFragment() {
     }
@@ -38,8 +42,8 @@ public class PlaceholderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-        textView.setText(getString(R.string.section_format, getString(getArguments().getInt(ARG_MESSAGE))));
+        txtMessageLog = (TextView) rootView.findViewById(R.id.section_label);
+        txtMessageLog.setText(getString(R.string.section_format, getString(getArguments().getInt(ARG_MESSAGE))));
         return rootView;
     }
 }

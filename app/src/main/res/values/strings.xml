@@ -1,9 +1,16 @@
 <resources>
     <string name="app_name">Android Playground</string>
-    <string name="action_settings">Settings</string>
     <string name="section_format">Hello! I\'m: %1$s</string>
     <string name="section_title_profile">PROFILE</string>
     <string name="section_title_wish_list">WISH LIST</string>
     <string name="section_title_feed">FEED</string>
     <string name="waiting">Waiting for something</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="drawer_section_collapsing_toolbar">Collapsing toolbar</string>
+    <string name="drawer_section_kiosk">Kiosk</string>
+    <string name="drawer_section_subsection_title">Communicate</string>
+    <string name="drawer_section_share">Share</string>
+    <string name="drawer_section_send">Send</string>
 </resources>

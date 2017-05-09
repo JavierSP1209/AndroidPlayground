@@ -1,9 +1,9 @@
-package com.javiersilva.playground;
+package com.javiersilva.playground.collapsingtoolbar.view;
 
 import android.animation.Animator;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -12,10 +12,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -24,7 +26,23 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ViewSwitcher;
 
-public class MainActivity extends AppCompatActivity {
+import com.javiersilva.playground.R;
+import com.javiersilva.playground.collapsingtoolbar.LongRunningObservableFactory;
+import com.javiersilva.playground.collapsingtoolbar.model.Owner;
+import com.javiersilva.playground.common.Constants;
+import com.javiersilva.playground.common.view.PlaceholderFragment;
+import com.javiersilva.playground.di.DaggerPlaygroundComponent;
+import com.javiersilva.playground.di.PlaygroundComponent;
+import com.javiersilva.playground.navigationdrawer.view.NavigationFragment;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+
+public class CollapsingToolbarFragment extends NavigationFragment {
 
     public static final int SECTION_COUNT = 3;
     public static final int SECTION_PROFILE = 0;
@@ -36,25 +54,47 @@ public class MainActivity extends AppCompatActivity {
     private ImageView imgSectionIcon;
     private View overlay;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    private LongRunningObservableFactory factory;
+    private CompositeDisposable disposables = new CompositeDisposable();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.collapsing_toolbar_fragment, container, false);
+
+        /*
+          There are different ways to initialize a component/module:
+          1 - If the module has a default constructor we can call .create() directly:
+               PlaygroundComponent component = DaggerPlaygroundComponent.create();
+          2 - If not we need specify how the module is created using a builder:
+               PlaygroundComponent component = DaggerPlaygroundComponent.builder()
+                   .playgroundModule(new PlaygroundModule(PARAMS)).build()
+          3 - Finally, if ALL the methods are static, we do not need an instance of the module, so
+              dagger will mark the module method (playgroundModule()) as deprecated since no instance
+              is needed and we can use create()
+               PlaygroundComponent component = DaggerPlaygroundComponent.create();
+          the main difference between 1 and 3 is the code generated for the module in which 3 is
+          preferred since is more efficient
+         */
+        PlaygroundComponent component = DaggerPlaygroundComponent.create();
+        Owner owner = component.getOwner();
+        factory = component.getLongRunningObservableFactory();
+        owner.instructSomething();
+
+        Toolbar toolbar = (Toolbar) root.findViewById(R.id.toolbar);
+        setUpToolbar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        ViewPager viewPager = (ViewPager) findViewById(R.id.container);
+        ViewPager viewPager = (ViewPager) root.findViewById(R.id.container);
         viewPager.setAdapter(sectionsPagerAdapter);
 
-        overlay = findViewById(R.id.overlay);
-        imgSectionIcon = (ImageView) findViewById(R.id.img_section_icon);
-        setUpHeaderImage();
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        overlay = root.findViewById(R.id.overlay);
+        imgSectionIcon = (ImageView) root.findViewById(R.id.img_section_icon);
+        setUpHeaderImage(root);
+        TabLayout tabLayout = (TabLayout) root.findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -76,15 +116,38 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_init);
+        FloatingActionButton fab = (FloatingActionButton) root.findViewById(R.id.fab_init);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, LongRunningIntentService.class);
-                startService(intent);
+                Observable<String> observable = factory.start();
+                Disposable disposable = observable.subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<String>() {
+                            @Override
+                            public void accept(String value) throws Exception {
+                                Log.d(Constants.TAG, "New message: " + value);
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception {
+                                Log.e(Constants.TAG, "Error: " + throwable.getMessage());
+                            }
+                        });
+                disposables.add(disposable);
             }
         });
-        setTitle(null);
+        return root;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(Constants.TAG, "onPause() called");
+        if (disposables != null && !disposables.isDisposed()) {
+            Log.d(Constants.TAG, "dispose: ");
+            disposables.dispose();
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -101,20 +164,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setUpHeaderImage() {
-        imgHeader = (ImageSwitcher) findViewById(R.id.img_header);
+    private void setUpHeaderImage(View root) {
+        imgHeader = (ImageSwitcher) root.findViewById(R.id.img_header);
         imgHeader.setFactory(new ViewSwitcher.ViewFactory() {
             public View makeView() {
                 // Create a new ImageView and set it's properties
-                ImageView imageView = new ImageView(getApplicationContext());
+                ImageView imageView = new ImageView(getContext());
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 imageView.setLayoutParams(new ImageSwitcher.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
                 return imageView;
             }
         });
         // load an animation by using AnimationUtils class
-        Animation in = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
-        Animation out = AnimationUtils.loadAnimation(this, android.R.anim.fade_out);
+        Animation in = AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_in);
+        Animation out = AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_out);
         imgHeader.setInAnimation(in);
         imgHeader.setOutAnimation(out);
         updateHeaderImage(SECTION_PROFILE);
